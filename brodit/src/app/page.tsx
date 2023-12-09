@@ -27,7 +27,7 @@ const CONTACT_ADDRESS = '0x73511669fd4dE447feD18BB79bAFeAC93aB7F31f'
 
 // cryptography
 import useModularArithmetic from './useModularArithmetic';
-import ModularArithmeticWorker from './modularArithmetic.worker;
+import ModularArithmeticWorker from './modularArithmetic.worker';
 
 export default function Home() {
     const [boxes, setBoxes] = useState<Brodit.BoxStructOutput[]>([])
