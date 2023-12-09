@@ -9,10 +9,9 @@ import { useWeb3Modal } from '@web3modal/wagmi/react'
 import Button from '../components/Button/Button'
 import { useAccount, useDisconnect, useWalletClient } from 'wagmi'
 import UploadFile from '../components/UploadFile/UploadFile'
-import { Client } from '@web3-storage/w3up-client'
-import FilesList from '../components/FilesList/FilesList'
 import { formatAddress } from '../../utils/formatAddress'
 import { create } from '@web3-storage/w3up-client'
+import Main from '@/components/Main/Main'
 
 
 // Before starting run ETH Node with: npm run evm-node
@@ -136,6 +135,8 @@ export default function Home() {
         <WalletProvider>
             <main className="flex min-h-screen flex-col items-center p-24 gap-8">
 
+            <Main />
+
             <button onClick={handleComputation}>Run Computation</button>
                 <p>Progress: {progress}%</p>
                 <p>{result}</p>
@@ -148,8 +149,7 @@ export default function Home() {
                 ) : (
                     <Button onClick={() => open()}>Connect</Button>
                 )}
-                 <UploadFile client={storageClient} setClient={setStorageClient} />
-                 <FilesList client={storageClient} setClient={setStorageClient} />
+                 <UploadFile />
 
                 <Button classes='py-12 bg-secondary' onClick={createBrodit}>
                     Book A Brodit

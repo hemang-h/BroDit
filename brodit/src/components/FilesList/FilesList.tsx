@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Client, create } from '@web3-storage/w3up-client';
+// import { NFTStorage,  } from 'nft.storage';
 
 
 export default function FilesList({ client, setClient }: { client?: Client, setClient: (client: Client) => void }) {
