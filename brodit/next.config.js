@@ -1,4 +1,17 @@
 /** @type {import('next').NextConfig} */
-const nextConfig = {}
+module.exports = {
+    webpack: (config, { isServer }) => {
+        if (!isServer) {
+            config.module.rules.push({
+                test: /\.worker\.js$/,
+                loader: 'worker-loader',
+                options: {
+                    publicPath: '/_next/static/',
+                    filename: 'static/[hash].worker.js', // Adjust the filename pattern as needed
+                },
+            });
+        }
 
-module.exports = nextConfig
+        return config;
+    },
+};

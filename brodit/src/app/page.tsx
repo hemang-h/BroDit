@@ -7,7 +7,10 @@ import { Brodit__factory } from '../../contract/typechain-types'
 import WalletProvider from '../../contextx/WalletProvider/WalletProvider'
 import { useWeb3Modal } from '@web3modal/wagmi/react'
 import Button from '../components/Button/Button'
-import { useAccount, useDisconnect } from 'wagmi'
+import { useAccount, useDisconnect, useWalletClient } from 'wagmi'
+import UploadFile from '../components/UploadFile/UploadFile'
+import { Client } from '@web3-storage/w3up-client'
+import FilesList from '../components/FilesList/FilesList'
 import { formatAddress } from '@/utils/formatAddress'
 
 // Before starting run ETH Node with: npm run evm-node
@@ -21,16 +24,25 @@ const CONTACT_ADDRESS = '0x73511669fd4dE447feD18BB79bAFeAC93aB7F31f'
 // Import first account into Metamask from run eth-node output
 
 export default function Home() {
+    const [storageClient, setStorageClient] = useState<Client>();
     const [boxes, setBoxes] = useState<Brodit.BoxStructOutput[]>([])
     // TODO: memos, state, etc...
     const { open } = useWeb3Modal();
     const { disconnect } = useDisconnect();
     const { address } = useAccount();
 
+    // useEffect(() => {
+    //     create().then(client => {
+    //         client.createSpace('my-brodits')
+    //     })
+    // }, []);
+
     const getContract = async () => {
         // TODO: Wallet Connect
         const provider = new BrowserProvider((window as any).ethereum)
-        const signer = await provider.getSigner()
+
+        console.log(address);
+        const signer = await provider.getSigner(address)
 
         const contract = Brodit__factory.connect(CONTACT_ADDRESS, signer)
         return { contract, signer }
@@ -82,10 +94,12 @@ export default function Home() {
                 ) : (
                     <Button onClick={() => open()}>Connect</Button>
                 )}
+                 <UploadFile client={storageClient} setClient={setStorageClient} />
+                 <FilesList client={storageClient} setClient={setStorageClient} />
 
                 <Button classes='py-12 bg-secondary' onClick={createBrodit}>
-                    Create Brodit
-                </Button>
+                    Book A Brodit
+                </Button>                
                 <hr className="w-80" />
                 <h2>Boxes</h2>
                 {boxes.map((t) => (
