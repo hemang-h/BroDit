@@ -12,6 +12,7 @@ import UploadFile from '../components/UploadFile/UploadFile'
 import { formatAddress } from '../../utils/formatAddress'
 import { create } from '@web3-storage/w3up-client'
 import Main from '@/components/Main/Main'
+import CreateBroditForm from '@/components/CreateBroditForm/CreateBroditForm'
 
 
 // Before starting run ETH Node with: npm run evm-node
@@ -133,9 +134,11 @@ export default function Home() {
 
     return (
         <WalletProvider>
-            <main className="flex min-h-screen flex-col items-center p-24 gap-8">
+            <main className="flex min-h-screen flex-col items-center p-24 gap-8 max-w-[1400px] mx-auto">
 
             <Main />
+
+            <CreateBroditForm />
 
             <button onClick={handleComputation}>Run Computation</button>
                 <p>Progress: {progress}%</p>
