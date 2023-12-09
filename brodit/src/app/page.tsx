@@ -12,6 +12,7 @@ import { formatAddress } from '../../utils/formatAddress'
 // import { create } from '@web3-storage/w3up-client'
 import Main from '@/components/Main/Main'
 import CreateBroditForm from '@/components/CreateBroditForm/CreateBroditForm'
+import LoadingDialog from '@/components/CreateBroditForm/LoadingDialog/LoadingDialog'
 
 
 
@@ -112,9 +113,7 @@ export default function Home() {
                 )}
                 
 
-                <Button classes='py-12 bg-secondary' onClick={createBrodit}>
-                    Book A Brodit
-                </Button>                
+                           
                 <hr className="w-80" />
                 <h2>Boxes</h2>
                 {boxes.map((t) => (
