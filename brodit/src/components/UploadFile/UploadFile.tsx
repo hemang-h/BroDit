@@ -1,40 +1,47 @@
-import React, { useState } from "react";
-import Button from "../Button/Button";
-import { NFTStorage, File } from 'nft.storage';
-import Image from "next/image";
+import React from "react";
+import Image from 'next/image';
 
 
-export default function UploadFile() {
-    const [file, setFile] = useState<File>();
+type UploadFileProps = {
+    files?: FileList;
+    setFiles: (files?: FileList) => void;
+};
 
-    const onUpload = () => {
-        const upload = async () => {
-            const name = '';
-            const description = '';
-
-            if (file) {
-                const storage = new NFTStorage({ token: process.env.NEXT_PUBLIC_STORAGE_KEY! });
-
-                return storage.store({
-                    image: file,
-                    name,
-                    description,
-                }).then(c => console.log(c));
-            }
-        }
-        upload();
-    };
-
+export default function UploadFile({ files, setFiles }: UploadFileProps) {
     return (
-        <div className='max-w-[572px] w-full border rounded-[20px] border-border h-[470px] flex justify-center items-center'>
-            <label htmlFor='upload'>
+        <div
+            className={
+                'max-w-[572px] w-full border rounded-[20px] border-border h-[470px] transition-colors hover:border-fg'
+                + `${files ? ' border-fg' : ''}`}
+        >
+            <label
+                htmlFor='upload'
+                className='w-full h-full flex justify-center items-center cursor-pointer'
+                onDrop={e => {
+                    e.preventDefault();
+                    if (e.dataTransfer.items?.length) {
+                        let filesList = [];
+                        const dT = new DataTransfer();
+                        setFiles(e.dataTransfer.files);
+                    }
+                }}
+            >
                 <input
                     id='upload'
                     className='display-none hidden'
                     type='file'
-                    onChange={e => e.target.files?.length && setFile(e.target.files[0])}
+                    onChange={e => e.target.files?.length && setFiles(e.target.files)}
                 />
-                <Image alt='draganddrop' src='draganddrop.svg' width={218} height={107} />
+
+                <div className='flex flex-col text-center gap-4'>
+                    {!files ? (
+                        <Image alt='draganddrop' src='draganddrop.svg' width={218} height={107} />
+                    ) : (
+                        <div className='text-2xl flex flex-col gap-1'>
+                            <div className='font-bold mb-1'>Uploaded:</div> {Array.from(files).map(f => <div key={f.name}>{f.name}</div>)}
+                        </div>
+                    )}
+                </div>
             </label>
         </div>
     );

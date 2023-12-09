@@ -7,8 +7,8 @@ import { Brodit__factory } from '../../contract/typechain-types'
 import WalletProvider from '../../contextx/WalletProvider/WalletProvider'
 import { useWeb3Modal } from '@web3modal/wagmi/react'
 import Button from '../components/Button/Button'
-import { useAccount, useDisconnect, useWalletClient } from 'wagmi'
-import UploadFile from '../components/UploadFile/UploadFile'
+import { useAccount, useDisconnect } from 'wagmi'
+// import UploadFile from '../components/UploadFile/UploadFile'
 import { formatAddress } from '../../utils/formatAddress'
 import { create } from '@web3-storage/w3up-client'
 import Main from '@/components/Main/Main'
@@ -152,7 +152,7 @@ export default function Home() {
                 ) : (
                     <Button onClick={() => open()}>Connect</Button>
                 )}
-                 <UploadFile />
+                
 
                 <Button classes='py-12 bg-secondary' onClick={createBrodit}>
                     Book A Brodit
