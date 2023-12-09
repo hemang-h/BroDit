@@ -1,9 +1,11 @@
 import { NFTStorage, File } from 'nft.storage'
+import { decryptString, deriveCryptoKey, encryptString } from './crypto'
+
 
 export interface Brodit {
   title: string
   description: string
-  files: File[]
+  files: File[],
 }
 
 export const emptyBrodit: Brodit = {
@@ -16,7 +18,7 @@ export const emptyBrodit: Brodit = {
 export interface RawBrodit {
   title: string
   description: string
-  files: { content: string; name: string }
+  files: { content: string; name: string }[]
 }
 
 const fileToBase64 = async (file: File): Promise<{ name: string; content: string }> => {
@@ -33,7 +35,10 @@ export const packBrodit = async (brodit: Brodit, password: string): Promise<File
   const base64Files = await Promise.all(promises)
 
   const pack = JSON.stringify({ ...brodit, files: base64Files })
-  return new File([pack], 'brodit')
+  const key = await deriveCryptoKey(password)
+  const cypher = await encryptString(pack, key)
+
+  return new File([cypher], 'brodit')
 }
 
 export const uploadBrodit = async (brodit: Brodit, password: string) => {
@@ -49,7 +54,24 @@ export const uploadBrodit = async (brodit: Brodit, password: string) => {
 // bafkreibahfwerubfdd7szxs6v2lws3femyimims5yojdfvgqxoccyomigq
 export const ipfsURL = (cid: string) => `https://${cid}.ipfs.nftstorage.link/`
 
-export const pullBrodit = async (cid: string) => {
-  const pack = await fetch(ipfsURL(cid)).then<RawBrodit>((t) => t.json())
-  return pack
+export const pullBrodit = async (cid: string, password: string) => {
+  const cypher = await fetch(ipfsURL(cid)).then((t) => t.text())
+
+  const key = await deriveCryptoKey(password)
+  const json = await decryptString(cypher, key)
+
+  return JSON.parse(json) as RawBrodit
+}
+
+window.pull = pullBrodit
+
+window.test = function () {
+  uploadBrodit(
+    {
+      title: 'Hi',
+      description: 'new title',
+      files: [new File(['asd'], 'helo.txt')],
+    },
+    'passhere'
+  )
 }

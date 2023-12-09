@@ -40,7 +40,7 @@ export default function LoadingDialog() {
                     />
                     <div className='ml-[8px]'>
                         Just a moment, this may take a little while. Please don’t close or refresh the page, it'll stop your deal from being sent.
-                    </div>
+                    </div> 
                 </div>
                 <ul className='flex flex-col gap-[8px] list-disc text-xl'>
                     {steps.map((step, id) => (
