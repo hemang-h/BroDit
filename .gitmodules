@@ -1,0 +1,3 @@
+[submodule "brodit/contract/lib/forge-std"]
+	path = brodit/contract/lib/forge-std
+	url = https://github.com/foundry-rs/forge-std
