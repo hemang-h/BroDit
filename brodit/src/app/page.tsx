@@ -1,9 +1,10 @@
 'use client'
 
 import { BrowserProvider } from 'ethers'
-import { useEffect, useMemo, useState } from 'react'
+
+import { useState } from 'react'
 import { Brodit } from '../../contract/typechain-types/Brodit'
-import { Brodit__factory } from '../../contract/typechain-types'
+
 import WalletProvider from '../../contextx/WalletProvider/WalletProvider'
 import { useWeb3Modal } from '@web3modal/wagmi/react'
 import Button from '../components/Button/Button'
@@ -27,8 +28,8 @@ import LoadingDialog from '@/components/CreateBroditForm/LoadingDialog/LoadingDi
 // Import first account into Metamask from run eth-node output
 
 // cryptography
-import useModularArithmetic from './useModularArithmetic';
-import ModularArithmeticWorker from './modularArithmetic.worker';
+// import useModularArithmetic from './useModularArithmetic';
+// import ModularArithmeticWorker from './modularArithmetic.worker';
 
 export default function Home() {
     const [boxes, setBoxes] = useState<Brodit.BoxStructOutput[]>([])
@@ -38,70 +39,16 @@ export default function Home() {
     const { disconnect } = useDisconnect();
     const { address } = useAccount();
 
-    const e = BigInt(3);
-    const m = BigInt(1000000007); // must be prime
-    const [forwardComputation, backwardComputation] = useModularArithmetic(e, m);
-    const [result, setResult] = useState<string>('');
-    const [progress, setProgress] = useState<number>(0);
-    const [worker, setWorker] = useState<Worker | null>(null);
-
-    useEffect(() => {
-        const newWorker = new ModularArithmeticWorker();
-        newWorker.onmessage = (e) => {
-            console.log("BLABLA");
-            if (e.data.progress) {
-                setProgress(e.data.progress);
-            }
-            if (e.data.result) {
-                setResult(`Result: ${e.data.result}`);
-            }
-        };
-        // newWorker.onerror = (error) => {
-        //     console.error('Error from worker:', error.message);
-        // };
-        setWorker(newWorker);
-
-        return () => {
-            newWorker.terminate();
-        };
-    }, []);
-
-    const handleComputation = () => {
-        console.log(worker);
-        worker?.postMessage({ 
-            x: '12345', 
-            e: '3', 
-            m: '1000000007', 
-            steps: '1000000',
-            type: 'forward' // or 'backward'
-        });
-    };
-
-   // const loadMementoes = async () => {
-    //     const { contract, signer } = await getContract()
-    //     const events = await contract.queryFilter(contract.getEvent('MementoCreated'))
-
-    //     const ids = events.map((t) => t.args.id)
-
-    //     const mementoes = await Promise.all(ids.map((t) => contract.getMemento(t)))
-    //     setBoxes(mementoes)
-    // }
-
-    // useEffect(() => {
-    //     loadMementoes()
-    // }, [])
- 
+//    
       return (
         <WalletProvider>
-            <main className="flex min-h-screen flex-col items-center p-24 gap-8 max-w-[1400px] mx-auto">
+            <main className="flex min-h-screen flex-col items-center p-24 gap-8 max-w-[1400px] mx-auto px-4">
 
             <Main />
 
             <CreateBroditForm />
 
-            <button onClick={handleComputation}>Run Computation</button>
-                <p>Progress: {progress}%</p>
-                <p>{result}</p>
+            
 
                 {address ? (
                     <>
