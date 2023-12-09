@@ -1,12 +1,19 @@
 import { NFTStorage, File } from 'nft.storage'
 
-export interface Memento {
+export interface Brodit {
   title: string
   description: string
   files: File[]
 }
 
-export interface RawMemento {
+export const emptyBrodit: Brodit = {
+    title: '',
+    description: '',
+    files: []
+  }
+  
+
+export interface RawBrodit {
   title: string
   description: string
   files: { content: string; name: string }
@@ -21,18 +28,18 @@ const fileToBase64 = async (file: File): Promise<{ name: string; content: string
   })
 }
 
-export const packMemento = async (memento: Memento, password: string): Promise<File> => {
-  const promises = memento.files.map((file) => fileToBase64(file))
+export const packBrodit = async (brodit: Brodit, password: string): Promise<File> => {
+  const promises = brodit.files.map((file) => fileToBase64(file))
   const base64Files = await Promise.all(promises)
 
-  const pack = JSON.stringify({ ...memento, files: base64Files })
-  return new File([pack], 'memento')
+  const pack = JSON.stringify({ ...brodit, files: base64Files })
+  return new File([pack], 'brodit')
 }
 
-export const uploadMemento = async (memento: Memento, password: string) => {
+export const uploadBrodit = async (brodit: Brodit, password: string) => {
   const storage = new NFTStorage({ token: process.env.NEXT_PUBLIC_STORAGE_KEY! })
 
-  const file = await packMemento(memento, password)
+  const file = await packBrodit(brodit, password)
   const cid = await storage.storeBlob(file)
 
   console.log('cid', cid)
@@ -42,7 +49,7 @@ export const uploadMemento = async (memento: Memento, password: string) => {
 // bafkreibahfwerubfdd7szxs6v2lws3femyimims5yojdfvgqxoccyomigq
 export const ipfsURL = (cid: string) => `https://${cid}.ipfs.nftstorage.link/`
 
-export const pullMemento = async (cid: string) => {
-  const pack = await fetch(ipfsURL(cid)).then<RawMemento>((t) => t.json())
+export const pullBrodit = async (cid: string) => {
+  const pack = await fetch(ipfsURL(cid)).then<RawBrodit>((t) => t.json())
   return pack
 }
