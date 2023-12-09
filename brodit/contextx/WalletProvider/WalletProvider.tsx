@@ -1,8 +1,6 @@
 'use client'
 
 import { createWeb3Modal, defaultWagmiConfig } from '@web3modal/wagmi/react'
-import { useEffect } from 'react';
-import { create } from '@web3-storage/w3up-client'
 import { WagmiConfig } from 'wagmi'
 import { localhost } from 'viem/chains'
 

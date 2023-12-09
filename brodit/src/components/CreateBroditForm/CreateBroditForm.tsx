@@ -1,94 +1,83 @@
-import React, { FormEvent, useState } from 'react';
-import InputField from '../InputField/InputField';
-import UploadFile from '../UploadFile/UploadFile';
-import Button from '../Button/Button';
-import { Brodit, emptyBrodit, uploadBrodit } from '../../services/brodit';
-import { BrowserProvider } from 'ethers';
-import { useAccount } from 'wagmi';
-import { Brodit__factory } from '../../../contract/typechain-types';
-import moment from 'moment';
+import React, { FormEvent, useState } from 'react'
+import InputField from '../InputField/InputField'
+import UploadFile from '../UploadFile/UploadFile'
+import Button from '../Button/Button'
 
-export default function CreateBroditForm() {
-    const [brodit, setBrodit] = useState<Brodit>(emptyBrodit);
-    // const [trigger, setTrigger] = useState('');
-    const { address } = useAccount();
-    const [date, setDate] = useState<Date>();
+import { Brodit, emptyBrodit } from '../../../services/brodit'
 
-    const getContract = async () => {
-        const provider = new BrowserProvider((window as any).ethereum);
-        const signer = await provider.getSigner(address);
+import moment from 'moment'
 
-        const contract = Brodit__factory.connect(process.env.NEXT_PUBLIC_CONTRACT_ADDRESS!, signer);
-        return { contract, signer };
-    }
+export default function CreateBroditForm({
+  onCreate,
+}: {
+  onCreate: (_: Brodit, date: Date) => void
+}) {
+  const [brodit, setBrodit] = useState<Brodit>(emptyBrodit)
+  const [date, setDate] = useState(new Date(Date.now()))
 
-    const createBrodit = async () => {
-        if (date) {
-            const cid = await uploadMemento(memento, 'pwd');
-            const { contract, signer } = await getContract();
-            const id = new Date().getTime();
-        
-            await contract.create(
-                id,
-                cid,
-                date!.getTime()
-            ).then((t) => t.wait());
-            alert(`Crated memento with id ${id}`);
-        } 
+  const onSubmit = async (e: FormEvent) => {
+    e.preventDefault()
+    onCreate(brodit, date)
+  }
 
-        
-    }
+  const handleChange = (field: keyof Brodit) => (value: any) => {
+    setBrodit({ ...brodit, [field]: value })
+  }
 
-    const onSubmit = async (e: FormEvent) => {
-        e.preventDefault();
-        createBrodit();
-    };
+  const isEnabled = brodit.title && brodit.description && brodit.files.length && date
 
-    const handleChange = (field: keyof Brodit) => (value: any) => {
-        setBrodit({ ...brodit, [field]: value });
-    }
+  return (
+    <form id="send" className="w-full transition-colors duration-300 mt-[40px]" onSubmit={onSubmit}>
+      <h3 className="text-3xl font-light mb-[18px] capitalize text-center">
+        Write a brodit to someone
+      </h3>
+      <div className="flex gap-[20px]">
+        <div className="max-w-[800px] w-full border border-border rounded-[20px] h-[470px] py-[24px] px-[42px] text-2xl transition-colors duration-300 hover:border-fg">
+          <InputField
+            value={brodit.title}
+            setValue={handleChange('title')}
+            placeholder="Enter a subject"
+          />
 
-    const isEnabled = brodit.title && brodit.description && brodit.files.length && date;
+          <textarea
+            value={brodit.description}
+            className="mt-2 outline-none pb-1 bg-bg w-full placeholder:text-watermark h-[380px] max-h-[380px] resize-none"
+            placeholder="To..."
+            onChange={(e) => handleChange('description')(e.target.value)}
+          />
+        </div>
 
-    return (
-        <form className='w-full transition-colors duration-300' onSubmit={onSubmit}>
-            <h3 className='text-2xl font-light mb-[8px]'>Step1. Book Brodit your with client/Auditor</h3>
-            <div className='flex gap-[20px]'>
-                <div className='max-w-[800px] w-full border border-border rounded-[20px] h-[470px] py-[24px] px-[42px] text-2xl transition-colors duration-300 hover:border-fg'>
-                    <InputField value={brodit.title} setValue={handleChange('title')} placeholder='Enter a subject' />
+        <UploadFile files={brodit.files} setFiles={handleChange('files')} />
+      </div>
 
-                    <textarea
-                        value={brodit.description}
-                        className='mt-2 outline-none pb-1 bg-bg w-full placeholder:text-watermark h-[380px] max-h-[380px] resize-none'
-                        placeholder='To...'
-                        onChange={e=>handleChange('description')(e.target.value)}
-                    />
-                </div>
+      <div className="w-full mt-4 gap-[20px] flex text-2xl">
+        <div className="h-[180px] max-w-[572px] w-full px-[42px] py-[32px] pt-[48px] border border-border rounded-[20px] flex flex-col transition-colors duration-300 hover:border-fg">
+          Seal this brodit until...
+          <input
+            type="datetime-local"
+            className="mt-4 bg-bg"
+            onChange={(e) => setDate(new Date(e.target.value))}
+          />
+        </div>
+        <div className="flex h-[180px] pl-[42px] w-full border border-border rounded-[20px] text-2xl transition-colors duration-300 hover:border-fg">
+          <div className="grid grid-cols-2 gap-x-[20px] my-auto gap-y-[8px]">
+            {/* <div>Date to unseal: </div><div>{date?.toLocaleString() ?? '-'}</div> */}
+            <div>Available: </div>
+            <div>{date ? moment(date).fromNow() : '-'}</div>
+            <div>Delivery fee: </div>
+            <div>0.003 ETH</div>
+          </div>
+          <Button
+            type="submit"
+            classes="w-full text-2xl px-[190px] h-full max-w-[312px] ml-auto rounded-l-[0px]"
+            disabled={!isEnabled}
+          >
+            Sign & Seal
+          </Button>
+        </div>
+      </div>
 
-                <UploadFile files={brodit.files} setFiles={handleChange('files')} />
-            </div>
-
-            <div className='w-full mt-4 gap-[20px] flex text-2xl'>
-                <div className='h-[180px] max-w-[572px] w-full px-[42px] py-[32px] pt-[48px] border border-border rounded-[20px] flex flex-col transition-colors duration-300 hover:border-fg'>
-                    Seal this memento until...
-                    <input type='datetime-local' className='mt-4 bg-bg' onChange={e => setDate(new Date(e.target.value))} />
-                </div>
-                <div className='flex h-[180px] pl-[42px] w-full border border-border rounded-[20px] text-2xl transition-colors duration-300 hover:border-fg'>
-                    <div className='grid grid-cols-2 gap-x-[20px] my-auto gap-y-[8px]'>
-                        {/* <div>Date to unseal: </div><div>{date?.toLocaleString() ?? '-'}</div> */}
-                        <div>Available: </div><div>{date ? moment(date).fromNow() : '-'}</div>
-                        <div>Delivery fee: </div><div>0.003 ETH</div>
-                    </div>
-                    <Button
-                        type='submit'
-                        classes='w-full text-2xl px-[190px] h-full max-w-[312px] ml-auto rounded-l-[0px]'
-                        disabled={!isEnabled}
-                    >
-                        Sign & Seal
-                    </Button>
-                </div>
-            </div>
-             {/* <SelectTrigger trigger={trigger} setTrigger={setTrigger} /> */}
-        </form>
-    );
+      {/* <SelectTrigger trigger={trigger} setTrigger={setTrigger} /> */}
+    </form>
+  )
 }
