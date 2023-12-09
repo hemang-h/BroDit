@@ -1,5 +1,10 @@
 /** @type {import('next').NextConfig} */
 module.exports = {
+    
+    images: {
+        domains: ['fontmeme.com'],
+      },
+      
     webpack: (config, { isServer }) => {
         if (!isServer) {
             config.module.rules.push({
