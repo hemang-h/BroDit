@@ -2,13 +2,13 @@
 
 import { BrowserProvider } from 'ethers'
 import { useEffect, useMemo, useState } from 'react'
-import { Memento } from '../../contract/typechain-types/Memento'
-import { Memento__factory } from '../../contract/typechain-types'
+import { Brodit } from '../../contract/typechain-types/Brodit'
+import { Brodit__factory } from '../../contract/typechain-types'
 
 // Before starting run ETH Node with: npm run eth-node
 // Then deploy contract locally with: npm run deploy-contract
 // Add address output bellow (LATER WILL BE IN ENV)
-const CONTACT_ADDRESS = ''
+const CONTACT_ADDRESS = '0x73511669fd4dE447feD18BB79bAFeAC93aB7F31f'
 
 // Setup local metamask
 // RPC_URL: http://127.0.0.1:8545/
@@ -16,7 +16,7 @@ const CONTACT_ADDRESS = ''
 // Import first account into Metamask from run eth-node output
 
 export default function Home() {
-  const [boxes, setBoxes] = useState<Memento.BoxStructOutput[]>([])
+  const [boxes, setBoxes] = useState<Brodit.BoxStructOutput[]>([])
   // TODO: memos, state, etc...
 
   const getContract = async () => {
@@ -24,11 +24,11 @@ export default function Home() {
     const provider = new BrowserProvider((window as any).ethereum)
     const signer = await provider.getSigner()
 
-    const contract = Memento__factory.connect(CONTACT_ADDRESS, signer)
+    const contract = Brodit__factory.connect(CONTACT_ADDRESS, signer)
     return { contract, signer }
   }
 
-  const createMemento = async () => {
+  const createBrodit = async () => {
     const { contract, signer } = await getContract()
 
     // Create. TODO: uuid
@@ -44,18 +44,18 @@ export default function Home() {
       )
       .then((t) => t.wait())
 
-    alert(`Crated memento with id ${id}`)
-    loadMementoes()
+    alert(`Crated brodit with id ${id}`)
+    loadBrodits()
   }
 
-  const loadMementoes = async () => {
+  const loadBrodits = async () => {
     const { contract, signer } = await getContract()
-    const events = await contract.queryFilter(contract.getEvent('MementoCreated'))
+    const events = await contract.queryFilter(contract.getEvent('BroditCreated'))
 
     const ids = events.map((t) => t.args.id)
 
-    const mementoes = await Promise.all(ids.map((t) => contract.getMemento(t)))
-    setBoxes(mementoes)
+    const brodits = await Promise.all(ids.map((t) => contract.getBrodit(t)))
+    setBoxes(brodits)
   }
 
   useEffect(() => {
@@ -65,8 +65,8 @@ export default function Home() {
   return (
     <main className="flex min-h-screen flex-col items-center p-24">
       App Will be here
-      <button className="bg-gray-200 p-5 m-3 rounded-md" onClick={createMemento}>
-        Create Memento
+      <button className="bg-gray-200 p-5 m-3 rounded-md" onClick={createBrodit}>
+        Create Brodit
       </button>
       <hr className="w-80" />
       <h2>Boxes</h2>
@@ -74,7 +74,7 @@ export default function Home() {
         <div key={t.expiration_date} className="bg-gray-100 rounded-lg my-2 p-3">
           <div>Sender: {t.sender}</div>
           <div>Receiver: {t.sender}</div>
-          <div>Memento: {t.memento}</div>
+          <div>Brodit: {t.brodit}</div>
           <div>Email: {t.receiver_email}</div>
         </div>
       ))}
