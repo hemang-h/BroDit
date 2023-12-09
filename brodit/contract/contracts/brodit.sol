@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity 0.8.9;
+pragma solidity 0.8.19;
 
 contract brodit {
     struct Box {
@@ -14,8 +14,8 @@ contract brodit {
     mapping (uint256 => Box) private brodites;
 
     function create(
-        uint256 memory broditCid,
         uint256 id,
+        string memory broditCid,
         uint256 expirationDate
     ) public payable {
         require(
@@ -31,6 +31,9 @@ contract brodit {
             expirationDate: expirationDate,
             stake: msg.value
         });
+
+        brodites[id] = box;
+        emit broditCreated(box.sender, id);
 
     }
         function getBrodit(uint256 id) public view returns (Box memory) {
