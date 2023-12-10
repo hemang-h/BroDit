@@ -10,8 +10,9 @@ export default function Header({
   setPage: (page: string) => void
 }) {
   const items = [
-    { name: 'Brodit Box', page: 'view' },
+    
     { name: 'Send a Brodit', page: 'send' },
+    { name: 'Brodit Box', page: 'box' },
     { name: 'Contact Us', page: 'contact' },
   ]
   const { open } = useWeb3Modal()
@@ -59,7 +60,7 @@ export default function Header({
                 ' cursor-pointer transition-colors duration-300 hover:bg-fg hover:text-primary'
               }
               onClick={() => {
-                alert(1)
+                // alert(1)
                 open().then(console.log.bind(null, 23))
               }}
             >

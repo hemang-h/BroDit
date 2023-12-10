@@ -22,19 +22,37 @@ import BroditBox from '@/components/BroditBox/BroditBox'
 export default function Home() {
     
     const [page, setPage] = useState('view')
+    const [currentStep, setCurrentStep] = useState(0);
+    const [showCreateDialog, setShowCreateDialog] = useState(false);
+    // const [cid, setCid] = useState('');
 
-  const { getContract } = useContract()
+    
+    // const { getContract } = useContract()
+    const [id, setId] = useState('');
+    const [pwd, setPwd] = useState('');
 
-  const createBrodit = async (brodit: Brodit, date: Date) => {
-    const cid = await uploadBrodit(brodit, 'pwd')
+    const { getContract } = useContract();
 
-    const contract = getContract()
-    const id = new Date().getTime()
+    const createBrodit = async (brodit: Brodit, date: Date) => {
+        setShowCreateDialog(true);
+        // const cid = await uploadBrodit(brodit, 'pwd')
+        const pwd = (Math.random() * 1e8).toString();
+        setPwd(pwd);
+        const cid = await uploadBrodit(brodit, pwd)
+
+        // setCid(cid);
+        setCurrentStep(3)
+        const contract = getContract()
+        const id = new Date().getTime()
+        setId(id.toString());
+
+
 
     await contract.create(id, cid, date!.getTime(), { value: 100 }).then((t) => t.wait())
+    // setPwd((Math.random() * 1e8).toString());
 
-    alert(`Crated brodit with id ${id}`)
-  }
+    setCurrentStep(4);
+  };
        
       return (
         <>
@@ -43,7 +61,15 @@ export default function Home() {
 
             <Main />
 
-            <CreateBroditForm />
+            <CreateBroditForm onCreate={createBrodit} />
+
+            {   showCreateDialog &&
+                <LoadingDialog
+                    currentStep={currentStep}
+                    onClose={() => { setShowCreateDialog(false); setId(''); setPwd(''); }}
+            link={global.window ? `${window.location.host}/${id}` : id}
+                />
+            }   
 
             <BroditBox />             
             </main>

@@ -4,6 +4,7 @@ const config: Config = {
   content: [
     './src/pages/**/*.{js,ts,jsx,tsx,mdx}',
     './src/components/**/*.{js,ts,jsx,tsx,mdx}',
+    './pages/**/*.{js,ts,jsx,tsx,mdx}',
     './src/app/**/*.{js,ts,jsx,tsx,mdx}',
   ],
   theme: {
@@ -15,9 +16,11 @@ const config: Config = {
       },
       colors: {
         "primary": "var(--primary)",
+        "primary-alt": "var(--primary-alt)",
         "primary-400": "var(--primary-400)",
         "secondary": "var(--secondary)",
         "bg": "var(--bg)",
+        "bg-alt": "var(--bg-alt)",
         "bg-hover": "var(--bg-hover)",
         "fg": "var(--fg)",
         "fg-disabled": "var(--fg-disabled)",

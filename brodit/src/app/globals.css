@@ -13,12 +13,24 @@
   --border: rgba(226,226,226, 0.4);
   --watermark: rgba(249, 244, 255, 0.38);
   --bg-hover: rgba(226,226,226, 0.1);
+  --border: rgba(226, 226, 226, 0.4);
+  --bg-hover: rgba(226, 226, 226, 0.1);
   --inactive: #c4c4c4;
   --disabled: rgba(255, 255, 255, 0.12);
   --primary-400: #332940;
+  --bg-alt: rgba(164, 150, 180, 1);
+  --primary-alt: rgba(119, 84, 162, 1);
+}
+html {
+  scroll-behavior: smooth;
 }
 
 body {
   color: var(--foreground);
   background: var(--background);
 }
+
+b {
+  font-weight: bold;
+}
+
