@@ -36,7 +36,7 @@ export default function Home() {
     const createBrodit = async (brodit: Brodit, date: Date) => {
         setShowCreateDialog(true);
         // const cid = await uploadBrodit(brodit, 'pwd')
-        const pwd = (Math.random() * 1e8).toString();
+        const pwd = (Math.round() * 1e8).toString();
         setPwd(pwd);
         const cid = await uploadBrodit(brodit, pwd)
 
@@ -51,7 +51,7 @@ export default function Home() {
     await contract.create(id, cid, date!.getTime(), { value: 100 }).then((t) => t.wait())
     // setPwd((Math.random() * 1e8).toString());
 
-    setCurrentStep(4);
+    setCurrentStep(5);
   };
        
       return (
@@ -68,6 +68,8 @@ export default function Home() {
                     currentStep={currentStep}
                     onClose={() => { setShowCreateDialog(false); setId(''); setPwd(''); }}
             link={global.window ? `${window.location.host}/${id}` : id}
+
+            password={pwd}
                 />
             }   
 

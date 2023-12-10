@@ -13,8 +13,8 @@ export default function CreateBroditForm({
   onCreate: (_: Brodit, date: Date) => void
 }) {
   const [brodit, setBrodit] = useState<Brodit>(emptyBrodit)
-  const [date, setDate] = useState(new Date(Date.now()))
-
+//   const [date, setDate] = useState(new Date(Date.now()))
+const [date, setDate] = useState<Date>()
   const onSubmit = async (e: FormEvent) => {
     e.preventDefault()
     onCreate(brodit, date)

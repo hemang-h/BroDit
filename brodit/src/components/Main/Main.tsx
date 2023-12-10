@@ -12,8 +12,8 @@ export default function Main() {
                     alt='memento-logo'
                     src='logo.svg'
                     className='logo'
-                    width={185}
-                    height={236}
+                    width={585}
+                    height={436}
                 />
                 <h1 className='logoTitle'>brodit</h1>
             </div>
