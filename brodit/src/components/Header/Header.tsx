@@ -1,4 +1,4 @@
-import { formatAddress } from '@/utils/formatAddress'
+import { formatAddress } from '../../../utils/formatAddress'
 import { useWeb3Modal, useDisconnect, useWeb3ModalAccount } from '@web3modal/ethers5/react'
 import React, { useState } from 'react'
 

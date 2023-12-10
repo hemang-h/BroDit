@@ -30,14 +30,17 @@ export default function UploadFile({ files, setFiles }: UploadFileProps) {
                     id='upload'
                     className='display-none hidden'
                     type='file'
-                    onChange={e => e.target.files?.length && setFiles(Array.from((e.target.files))}
+                    onChange={e => e.target.files?.length && setFiles(Array.from(e.target.files))}
                 />
 
                 <div className='flex flex-col text-center gap-4'>
                     {!files?.length ? (
                         <Image alt='draganddrop' src='draganddrop.svg' width={218} height={107} />
                     ) : (
-                        <div className='font-bold mb-1'>Uploaded:</div> {files.map(f => <div key={f.name}>{f.name}</div>)}
+                        <div className='text-2xl flex flex-col gap-1'>
+                            <div className='font-bold mb-1'>Uploaded:</div> {files.map(f => <div key={f.name}>{f.name}</div>)}
+                        </div>
+                    )}
                 </div>
             </label>
         </div>

@@ -15,6 +15,7 @@
     "@web3-storage/w3up-client": "^11.2.1",
     "@web3modal/ethers5": "^3.4.0",
     "@web3modal/wagmi": "^3.4.0",
+    "jost": "^0.0.2",
     "mime": "^4.0.0",
     "moment": "^2.29.4",
     "next": "14.0.4",

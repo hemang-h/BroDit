@@ -4,10 +4,10 @@ import { useState } from 'react'
 
 import Header from '@/components/Header/Header'
 import Main from '@/components/Main/Main'
-import CreateBroditForm from '@/components/CreateBroditForm/CreateBroditForm'
+import CreateBroditForm  from '@/components/CreateBroditForm/CreateBroditForm'
 
 import { Brodit, uploadBrodit } from '../../services/brodit'
-import { useContract } from '../../services/contract'
+import { useContract } from '../../services/contracts'
 
 import LoadingDialog from '@/components/CreateBroditForm/LoadingDialog/LoadingDialog'
 import BroditBox from '@/components/BroditBox/BroditBox'
@@ -25,15 +25,15 @@ export default function Home() {
 
   const { getContract } = useContract()
 
-  const createMemento = async (memento: Memento, date: Date) => {
-    const cid = await uploadMemento(memento, 'pwd')
+  const createBrodit = async (brodit: Brodit, date: Date) => {
+    const cid = await uploadBrodit(brodit, 'pwd')
 
     const contract = getContract()
     const id = new Date().getTime()
 
     await contract.create(id, cid, date!.getTime(), { value: 100 }).then((t) => t.wait())
 
-    alert(`Crated memento with id ${id}`)
+    alert(`Crated brodit with id ${id}`)
   }
        
       return (

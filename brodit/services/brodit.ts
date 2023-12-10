@@ -63,15 +63,3 @@ export const pullBrodit = async (cid: string, password: string) => {
   return JSON.parse(json) as RawBrodit
 }
 
-window.pull = pullBrodit
-
-window.test = function () {
-  uploadBrodit(
-    {
-      title: 'Hi',
-      description: 'new title',
-      files: [new File(['asd'], 'helo.txt')],
-    },
-    'passhere'
-  )
-}
